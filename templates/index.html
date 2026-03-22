@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Major - Checkpoint Selector</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; }
+        select, button { padding: 10px; font-size: 16px; margin: 10px; }
+        .flash { color: red; background: #ffeeee; padding: 10px; border: 1px solid red; }
+    </style>
+</head>
+<body>
+    <h1>Select Model Checkpoint</h1>
+    
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="/load_checkpoint" method="post">
+        <label>Available .pt files:</label><br>
+        <select name="ckpt">
+            {% for c in ckpts %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Load Model & Check Index</button>
+    </form>
+    
+    <p><small>Note: If the FAISS index folder doesn't exist, it will be built automatically. This may take a minute.</small></p>
+</body>
+</html>

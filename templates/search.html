@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Major - Query</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background: #f4f4f4; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .controls { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #ddd; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .card { border: 1px solid #ddd; padding: 10px; text-align: center; background: #fff; }
+        .card img { max-width: 100%; height: auto; border-radius: 4px; }
+        .card span { display: block; margin-top: 5px; font-size: 12px; color: #555; }
+        .mode-switch { margin-bottom: 15px; }
+        .hidden { display: none; }
+    </style>
+    <script>
+        function toggleMode(mode) {
+            document.getElementById('t2i-form').classList.toggle('hidden', mode !== 't2i');
+            document.getElementById('i2i-form').classList.toggle('hidden', mode !== 'i2i');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <a href="/">← Change Checkpoint</a>
+            <h2>Manual Query</h2>
+            
+            <div class="mode-switch">
+                <label><input type="radio" name="mode_sel" onclick="toggleMode('t2i')" {% if mode=='t2i' %}checked{% endif %}> Text Search</label>
+                <label><input type="radio" name="mode_sel" onclick="toggleMode('i2i')" {% if mode=='i2i' %}checked{% endif %}> Image Search</label>
+            </div>
+
+            <form id="t2i-form" action="/search" method="post" class="{% if mode=='i2i' %}hidden{% endif %}">
+                <input type="hidden" name="mode" value="t2i">
+                <input type="text" name="text_query" placeholder="Enter description..." style="width: 300px; padding: 8px;" value="{{ query_display if mode == 't2i' else '' }}" required>
+                <button type="submit" style="padding: 8px 15px;">Search</button>
+            </form>
+
+            <form id="i2i-form" action="/search" method="post" enctype="multipart/form-data" class="{% if mode=='t2i' %}hidden{% endif %}">
+                <input type="hidden" name="mode" value="i2i">
+                <input type="file" name="image_query" accept="image/*" required>
+                <button type="submit" style="padding: 8px 15px;">Search</button>
+                {% if mode == 'i2i' and query_display %}
+                    <br><br>
+                    <img src="/uploads/{{ query_display }}" style="height: 100px; border: 2px solid blue;">
+                    <small>Query Image</small>
+                {% endif %}
+            </form>
+        </div>
+
+        {% if results %}
+        <h3>Top Results</h3>
+        <div class="grid">
+            {% for res in results %}
+            <div class="card">
+                <img src="/images/{{ res.filename }}" loading="lazy">
+                <span>#{{ res.rank }} | Score: {{ res.score }}</span>
+                <span style="font-size: 10px; color: #999;">{{ res.filename }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

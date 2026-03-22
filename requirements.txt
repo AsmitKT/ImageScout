@@ -1,0 +1,8 @@
+torch>=2.2
+torchvision>=0.17
+transformers==4.43.3
+pillow
+pandas
+tqdm
+# Optional (Intel oneAPI / IPEX acceleration):
+intel-extension-for-pytorch>=2.2.0 ; platform_system=="Linux"

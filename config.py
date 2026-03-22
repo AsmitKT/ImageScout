@@ -1,0 +1,53 @@
+#Major\config.py
+CFG={
+    "data":{
+        "base_dir":"./dataset",
+        "images_subdir":"images",
+        "csv_name":"captions.csv",
+        "max_text_len":50,
+        "batch_size":60,
+        "num_workers":2,
+        "pin_memory":True,
+        "aug":{
+            "random_resized_crop":{"size":224,"scale":[0.9,1.0],"ratio":[0.9,1.1]},
+            "horizontal_flip_p":0.5,
+            "color_jitter":{"brightness":0.1,"contrast":0.1,"saturation":0.1,"hue":0.02},
+            "use_color_jitter":True
+        },
+        "train_split_name":"train",
+        "eval_split_name":"val",
+        "test_split_name":"test"
+    },
+    "model":{
+        "vocab_size":49408,
+        "max_len":50,
+        "d_model":384,
+        "n_layers":6,
+        "n_heads":6,
+        "mlp_ratio":4.0,
+        "image_size":224,
+        "patch_size":16,
+        "embed_dim":384,
+        "attn_drop":0.0,
+        "proj_drop":0.10,
+        "mlp_drop":0.10,
+        "resid_drop":0.10
+    },
+    "train":{
+        "epochs":68,
+        "lr":4e-4,
+        "betas":(0.9,0.98),
+        "weight_decay":0.05,
+        "multi_positive":True,
+        "grad_clip":1.0,
+        "warmup_epochs":5,
+        "resume_warmup_epochs": 1,
+        "fp16":True,
+        "grad_accum":4,
+        "ckpt_dir":"./checkpoints",
+        "seed":42,
+        "save_interval_epochs":1,
+        "eval_interval_epochs":1,
+        "resume":True
+    }
+}
